@@ -3,4 +3,9 @@ input_path = current_file_path.gsub("puzzles", "inputs").gsub(".rb", ".txt")
 
 input = File.open(input_path).read.strip
 
-p input.split("\n\n").map { |a| a.split("\n")}.map { |a| a.map(&:to_i).sum }.max
+# max cal
+input.split("\n\n").map { |a| a.split("\n")}.map { |a| a.map(&:to_i).sum }.max
+
+# max 3 cal
+input.split("\n\n").map { |a| a.split("\n")}.map { |a| a.map(&:to_i).sum }.max(3).sum
+
