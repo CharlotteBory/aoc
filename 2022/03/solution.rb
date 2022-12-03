@@ -18,3 +18,14 @@ p input
     .map { |item| ("a".."z").to_a.concat(("A".."Z").to_a).index(item) + 1 }
     .sum
 
+# Part 2
+badges = []
+
+while input.size >= 3 do
+  group = input.take(3).map(&:chars)
+  badges << (group[0] & group[1] & group[2])[0]
+  input = input.drop(3)
+end
+
+p badges.map { |item| ("a".."z").to_a.concat(("A".."Z").to_a).index(item) + 1 }
+    .sum
