@@ -15,16 +15,31 @@ input = File.open(input_path).read.split("\n")
 require_relative '../../shared/stack.rb'
 
 class SupplyStacksParser
-  attr_reader :input, :starting_positions, :instructions, :stack_number
+  attr_reader :input, :stacks, :instructions
+  private attr_reader :starting_positions, :stack_number
 
   def initialize(input:)
     @input = input
   end
 
-  def call
+  def parse_input
     @starting_positions = extract_starting_positions(input)
     @instructions = extract_instructions(input)
     @stack_number = extract_number_of_stacks(input)
+    self
+  end
+
+  def stackify
+    @stacks = starting_positions
+      .map { |s| s.ljust(stack_number * 4 - 1) }
+      .map { |s| s.gsub("    ", "[.]") }
+      .map { |s| s.gsub(" ", "") }
+      .map { |s| s.gsub("[", "").gsub("]", "") }
+      .map { |s| s.chars }
+      .transpose
+      .map(&:reverse)
+      .map { |a| a.select { |l| l != "." } }
+      .map { |s| Stack.new(s) }
     self
   end
 
@@ -44,38 +59,45 @@ class SupplyStacksParser
   end
 end
 
-data = SupplyStacksParser.new(input: input).call
+class CraneOperator
+  attr_reader :instructions
+  attr_accessor :stacks
 
-stacks = data.starting_positions
-  .map { |s| s.ljust(data.stack_number * 4 - 1) }
-  .map { |s| s.gsub("    ", "[.]") }
-  .map { |s| s.gsub(" ", "") }
-  .map { |s| s.gsub("[", "").gsub("]", "") }
-  .map { |s| s.chars }
-  .transpose
-  .map(&:reverse)
-  .map { |a| a.select { |l| l != "." } }
-  .map { |s| Stack.new(s) }
+  def initialize(stacks:, instructions:)
+    @stacks = stacks
+    @instructions = instructions
+  end
 
-def fulfill_instruction(stacks, instruction)
-  instruction = instruction
-    .gsub("move ", "")
-    .gsub(" from ", ",")
-    .gsub(" to ", ",")
-    .split(",")
-    .map(&:to_i)
-  from = instruction[1] - 1
-  crate_nb = instruction[0]
-  to = instruction[2] - 1
-  crates = stacks[from].pop(crate_nb)
-  # Part 1
-  # stacks[to].push(crates.reverse)
-  # Part 2
-  stacks[to].push(crates)
-  stacks
+  def fulfill_instructions
+    instructions.each { |i| fulfill_instruction(stacks, i) }
+    stacks
+  end
+
+  private
+
+  def fulfill_instruction(stacks, instruction)
+    instruction = instruction
+      .gsub("move ", "")
+      .gsub(" from ", ",")
+      .gsub(" to ", ",")
+      .split(",")
+      .map(&:to_i)
+    from = instruction[1] - 1
+    crate_nb = instruction[0]
+    to = instruction[2] - 1
+    crates = stacks[from].pop(crate_nb)
+    # Part 1
+    # stacks[to].push(crates.reverse)
+    # Part 2
+    stacks[to].push(crates)
+  end
 end
 
-data.instructions.each { |i| stacks = fulfill_instruction(stacks, i) }
+data = SupplyStacksParser.new(input: input).parse_input.stackify
+
+stacks = data.stacks
+
+stacks = CraneOperator.new(stacks: stacks, instructions: data.instructions).fulfill_instructions
 
 
 p stacks.map(&:pop).join
