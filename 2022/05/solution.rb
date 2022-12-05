@@ -12,6 +12,8 @@ input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 
 input = File.open(input_path).read.split("\n")
 
+require_relative '../../shared/stack.rb'
+
 starting_positions = input.take_while { |l| l.include?("[") }
 instructions = input[starting_positions.size + 2..]
 
@@ -26,6 +28,7 @@ stacks = starting_positions
   .transpose
   .map(&:reverse)
   .map { |a| a.select { |l| l != "." } }
+  .map { |s| Stack.new(s) }
 
 def fulfill_instruction(stacks, instruction)
   instruction = instruction
@@ -39,13 +42,13 @@ def fulfill_instruction(stacks, instruction)
   to = instruction[2] - 1
   crates = stacks[from].pop(crate_nb)
   # Part 1
-  # stacks[to].concat(crates.reverse)
+  # stacks[to].push(crates.reverse)
   # Part 2
-  stacks[to].concat(crates)
+  stacks[to].push(crates)
   stacks
 end
 
 instructions.each { |i| stacks = fulfill_instruction(stacks, i) }
 
 
-p stacks.map(&:last).join
+p stacks.map(&:pop).join
