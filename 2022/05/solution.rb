@@ -38,7 +38,10 @@ def fulfill_instruction(stacks, instruction)
   crate_nb = instruction[0]
   to = instruction[2] - 1
   crates = stacks[from].pop(crate_nb)
-  stacks[to].concat(crates.reverse)
+  # Part 1
+  # stacks[to].concat(crates.reverse)
+  # Part 2
+  stacks[to].concat(crates)
   stacks
 end
 
