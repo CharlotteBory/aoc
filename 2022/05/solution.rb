@@ -14,13 +14,40 @@ input = File.open(input_path).read.split("\n")
 
 require_relative '../../shared/stack.rb'
 
-starting_positions = input.take_while { |l| l.include?("[") }
-instructions = input[starting_positions.size + 2..]
+class SupplyStacksParser
+  attr_reader :input, :starting_positions, :instructions, :stack_number
 
-stack_number = input[starting_positions.size][-1].to_i
+  def initialize(input:)
+    @input = input
+  end
 
-stacks = starting_positions
-  .map { |s| s.ljust(stack_number * 4 - 1) }
+  def call
+    @starting_positions = extract_starting_positions(input)
+    @instructions = extract_instructions(input)
+    @stack_number = extract_number_of_stacks(input)
+    self
+  end
+
+  private
+
+  def extract_starting_positions(input)
+    input.take_while { |l| l.include?("[") }
+  end
+
+  def extract_instructions(input)
+    start_index = input.find_index { |l| l.start_with?("move") }
+    input[start_index..]
+  end
+
+  def extract_number_of_stacks(input)
+    input.find { |l| l.start_with?(" 1") }[-1].to_i
+  end
+end
+
+data = SupplyStacksParser.new(input: input).call
+
+stacks = data.starting_positions
+  .map { |s| s.ljust(data.stack_number * 4 - 1) }
   .map { |s| s.gsub("    ", "[.]") }
   .map { |s| s.gsub(" ", "") }
   .map { |s| s.gsub("[", "").gsub("]", "") }
@@ -48,7 +75,7 @@ def fulfill_instruction(stacks, instruction)
   stacks
 end
 
-instructions.each { |i| stacks = fulfill_instruction(stacks, i) }
+data.instructions.each { |i| stacks = fulfill_instruction(stacks, i) }
 
 
 p stacks.map(&:pop).join
