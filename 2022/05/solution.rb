@@ -71,13 +71,13 @@ class CraneOperator
   end
 
   def fulfill_instructions
-    instructions.each { |i| fulfill_instruction(stacks, i) }
+    instructions.each { |i| fulfill_instruction(i) }
     stacks
   end
 
   private
 
-  def fulfill_instruction(stacks, instruction)
+  def fulfill_instruction(instruction)
     instruction = instruction
       .gsub("move ", "")
       .gsub(" from ", ",")
