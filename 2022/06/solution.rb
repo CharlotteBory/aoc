@@ -12,13 +12,17 @@ input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 
 input = File.open(input_path).read.strip.chars
 
-packet = 4
-i = 0
+def first_uniq_sequence(input, length)
+  i = 0
+  while i < input.length
+    return i + length if input[i.. i + length - 1] == input[i..i + length - 1].uniq
 
-while i < input.length
-  break packet + 1 if input[i..packet] == input[i..packet].uniq
-
-  i += 1
-  packet += 1
+    i += 1
+  end
 end
-p packet
+
+# Part 1
+p first_uniq_sequence(input, 4)
+
+# Part 2
+p first_uniq_sequence(input, 14)
