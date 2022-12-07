@@ -16,7 +16,7 @@ class Directory
   end
 
   def add_child(name:, size: nil)
-    return self if children.find { |c| c.name == name }
+    return self if child(name)
 
     children << Directory.new(name: name, size: size, parent: self)
   end
