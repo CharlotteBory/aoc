@@ -41,5 +41,16 @@ end
 root = current_dir.root
 dirs = root.calculate_size
 
+# Part 1
 p root.size
 p root.sum_of_dirs_under(100000)
+
+# Part 2
+p "Usage #{root.size}/70000000"
+p "Unused: #{70000000 - root.size}"
+p "Needed: 30000000"
+
+missing = 30000000 - (70000000 - root.size)
+p missing
+
+p root.dirs_over(missing).flatten.min_by { |d| d.size }.size

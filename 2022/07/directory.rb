@@ -42,6 +42,19 @@ class Directory
     sum
   end
 
+  def dirs_over(max, collection = [])
+    return collection unless dir?
+    return collection if size < max
+
+    collection << self if size >= max
+
+    children.each do |child|
+      collection << child.dirs_over(max, collection) - collection
+    end
+
+    collection
+  end
+
   def dir?
     children.size > 0
   end
