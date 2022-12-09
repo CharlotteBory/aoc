@@ -1,5 +1,5 @@
 class Map
-  private attr_reader :tail_trace, :head_trace, :size
+  attr_reader :tail_trace, :head_trace, :size
 
   def initialize
     @tail_trace = Hash.new(0)
@@ -25,9 +25,7 @@ class Map
 
   def print(head = nil, tail = nil)
     get_size
-    p ["size", size]
     matrix = Array.new(size[:y]) {Array.new(size[:x], ".") }
-    p tail_trace
     tail_trace.keys.each do |k|
       x, y = parse_key(k)
       matrix[y][x] = "#"
@@ -40,10 +38,10 @@ class Map
   private
 
   def key(x, y)
-    [x, y].join("-")
+    [x, y].join("_")
   end
   def parse_key(key)
-    key.split("-").map(&:to_i)
+    key.split("_").map(&:to_i)
   end
 
   def get_size
