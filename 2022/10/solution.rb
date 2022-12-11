@@ -12,7 +12,7 @@ input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 
 input = File.open(input_path).read.split("\n")
 
-# Part II
+# Part I
 x = 1
 cycle = 1
 
