@@ -40,6 +40,7 @@ class Map
   def key(x, y)
     [x, y].join("_")
   end
+
   def parse_key(key)
     key.split("_").map(&:to_i)
   end
