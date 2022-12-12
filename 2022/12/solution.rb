@@ -13,32 +13,36 @@ input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 input = File.open(input_path).read.split("\n").map(&:chars)
 
 class ElevationMap
-  attr_reader :start, :nodes, :finish
-  def initialize(nodes:, start:, finish:)
+  attr_reader :start, :nodes, :finish, :low_points
+
+  def initialize(nodes:, start:, finish:, low_points:)
     @nodes = nodes
     @start = nodes[start]
     @finish = nodes[finish]
+    @low_points = low_points
   end
 
   def self.build_from_2d_array(array)
     nodes = Hash.new
     start, finish = ["", ""]
+    low_points = []
     array.each_with_index do |row, y|
       row.each_with_index do |elevation, x|
         value = clean_elevation(elevation)
         children = accessible_children(x, y, value, array)
         start = key(x, y) if elevation == "S"
+        low_points << key(x, y) if value == "a"
         finish = key(x, y) if elevation == "E"
         nodes[key(x, y)] = Node.new(value:, children:)
       end
     end
 
-    self.new(nodes:, start:,  finish:)
+    self.new(nodes:, start:,  finish:, low_points:)
   end
 
-  def shortest_path
-    to_visit = [start]
-    start.distance = 0
+  def shortest_path(start_point: start)
+    to_visit = [start_point]
+    start_point.distance = 0
     while !to_visit.empty?
       current_node = to_visit.shift
       next if current_node.children.empty?
@@ -55,6 +59,14 @@ class ElevationMap
       # puts ""
     end
     finish.distance
+  end
+
+  def shortest_path_from_any_low_point
+    path_lengths = []
+    low_points.each do |start_key|
+      path_lengths << shortest_path(start_point: nodes[start_key])
+    end
+    path_lengths.min
   end
 
   private
@@ -103,3 +115,4 @@ class Node
 end
 
 p ElevationMap.build_from_2d_array(input).shortest_path
+p ElevationMap.build_from_2d_array(input).shortest_path_from_any_low_point
