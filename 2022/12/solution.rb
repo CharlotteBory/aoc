@@ -7,7 +7,7 @@
 #          |*  |    |   |    \____________/       *
 #
 #                s p o i l e r s
-require 'pry-byebug'
+
 input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 
 input = File.open(input_path).read.split("\n").map(&:chars)
@@ -55,8 +55,6 @@ class ElevationMap
           to_visit << child
         end
       end
-      # p nodes.map { |k,v| [k, v.distance] if v.distance < 10000 }.compact.to_h
-      # puts ""
     end
     finish.distance
   end
