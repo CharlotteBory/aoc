@@ -10,8 +10,11 @@
 require 'pry-byebug'
 input_path = File.expand_path(File.dirname(__FILE__)) + "/data.txt"
 
-input = File.open(input_path).read.split("\n\n")
+input_part1 = File.open(input_path).read.split("\n\n")
   .map { |l| l.split("\n").map { |s| eval s }}
+
+input_part2 = File.open(input_path).read.split("\n")
+  .map { |s| eval s }.compact
 
 def compare(left, right)
   left = arrify(left) if left.is_a?(Integer)
@@ -33,7 +36,17 @@ def arrify(value)
 end
 
 pairs = []
-input.each_with_index do |(left, right), i|
+input_part1.each_with_index do |(left, right), i|
   pairs << i + 1 if compare(left, right)
 end
 p pairs.sum
+
+sorted_packets = input_part2.sort { |a, b| compare(a, b) ? -1 : 1 }
+dividers_indices = []
+dividers = [[[2]], [[6]]]
+sorted_packets.each_with_index do |p, i|
+
+  dividers_indices << i + 1 if dividers.include?(p)
+end
+
+p dividers_indices.reduce { |i, p| p * i }
