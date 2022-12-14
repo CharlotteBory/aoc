@@ -17,24 +17,31 @@ p input
 
 class Cave
   attr_accessor :sand_count
-  private attr_reader :input, :abyss
+  private attr_reader :input, :abyss, :with_floor
   private attr_accessor :map, :reached_abyss
 
   ROCK = "#".freeze
   SAND = "o".freeze
   SAND_START = [500, 0]
 
-  def initialize(input)
+  def initialize(input, with_floor: false)
     @input = input
     @map = Hash.new
     plot_rocks
-    @abyss = find_abyss
     @reached_abyss = false
     @sand_count = 0
+    @with_floor = with_floor
   end
 
-  def fill
+  def fill_with_abyss
     while !reached_abyss do
+      drop_sand
+    end
+    self
+  end
+
+  def fill_to_brim
+    while map[key(*SAND_START)] != SAND do
       drop_sand
     end
     self
@@ -46,8 +53,8 @@ class Cave
     x, y = SAND_START
     rested = false
 
-    until rested || reached_abyss do
-      if y >= abyss
+    until rested || (!with_floor && reached_abyss) do
+      if !with_floor && y >= abyss
         self.reached_abyss = true
         next
       end
@@ -71,17 +78,15 @@ class Cave
   end
 
   def down_free(x, y)
-    !map[key(x, y + 1)]
+    !map[key(x, y + 1)] && y + 1 != floor
   end
 
   def down_left_free(x, y)
-    return unless x.positive?
-
-    !map[key(x - 1, y +1)]
+    !map[key(x - 1, y +1)] && y + 1 != floor
   end
 
   def down_right_free(x, y)
-    !map[key(x + 1, y +1)]
+    !map[key(x + 1, y +1)] && y + 1 != floor
   end
 
   def drop_down(x, y)
@@ -100,8 +105,12 @@ class Cave
     input.each { |rock| plot_rock(rock) }
   end
 
-  def find_abyss
-    map.keys.map { |key| key.split("_").last.to_i }.max + 1
+  def abyss
+    @abyss ||= map.keys.map { |key| key.split("_").last.to_i }.max + 1
+  end
+
+  def floor
+    @floor ||= map.keys.map { |key| key.split("_").last.to_i }.max + 2
   end
 
   def plot_rock(rock)
@@ -132,4 +141,5 @@ class Cave
   end
 end
 
-p Cave.new(input).fill.sand_count
+p Cave.new(input).fill_with_abyss.sand_count
+p Cave.new(input, with_floor: true).fill_to_brim.sand_count
