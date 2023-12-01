@@ -6,6 +6,6 @@ namespace :solve do
     day = ENV["day"]
     require "./2023/#{day}_solution.rb"
     input = File.read("2023/#{day}_input.txt")
-    puts Day01.part_one(input)
+    puts Object.const_get("Day#{day}").part_one(input)
   end
 end
