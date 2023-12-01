@@ -8,4 +8,11 @@ namespace :solve do
     input = File.read("2023/#{day}_input.txt")
     puts Object.const_get("Day#{day}").part_one(input)
   end
+
+  task :part_two do
+    day = ENV["day"]
+    require "./2023/#{day}_solution.rb"
+    input = File.read("2023/#{day}_input.txt")
+    puts Object.const_get("Day#{day}").part_two(input)
+  end
 end
