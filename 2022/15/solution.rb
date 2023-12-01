@@ -62,7 +62,6 @@ class Cave
   end
 
   def add_outline(signal)
-    p signal
     distance = distance(signal)
     x = signal["sensor_x"]
     y = signal["sensor_y"]

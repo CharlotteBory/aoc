@@ -42,7 +42,7 @@ x_values.each_slice(40) do |group|
   row = Array.new(40, ".")
   group.each_with_index do |x, i|
     sprite = (x-1..x+1)
-    row[i] = "#" if sprite.include?(i)
+    row[i] = "█" if sprite.include?(i)
   end
   screen << row
 end
