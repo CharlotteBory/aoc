@@ -17,3 +17,16 @@ namespace :solve do
     puts Object.const_get("Day#{day}").part_two(input)
   end
 end
+
+namespace :generate do
+  desc "Create files for the day from template"
+  task :day do
+    day = ENV["day"]
+    sh <<-Command
+    cp 2023/00_solution.rb 2023/#{day}_solution.rb
+    cp 2023/00_input.txt 2023/#{day}_input.txt
+    cp 2023/00_solution_spec.rb 2023/#{day}_solution_spec.rb
+    sed -i "" "s/00/#{day}/g" 2023/#{day}_solution.rb 2023/#{day}_solution_spec.rb
+    Command
+  end
+end
