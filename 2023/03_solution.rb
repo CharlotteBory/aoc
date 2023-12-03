@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "../shared/day"
+require_relative "../shared/grid"
 require_relative "../shared/helpers"
 
 class Day03 < Day
   def initialize(input)
     super
+    @grid = Grid.new(input:)
     split_lines!
     @numbers_to_sum = []
     @gear_ratios = Hash.new([])
@@ -59,30 +61,10 @@ class Day03 < Day
 
   private
 
+  attr_reader :grid
+
   def symbol_adjacent?(i, j)
-    line_min = i > 0 ? i - 1 : i
-    line_max = i == input.count - 1 ? i : i + 1
-    col_min = j > 0 ? j -1 : j
-    col_max = j == input[0].length - 1 ? j : j + 1
-    adjacent_chrs = []
-
-    if line_min != i
-      adjacent_chrs << input[line_min][col_min..col_max].chars
-    end
-
-    if col_min != j
-      adjacent_chrs << input[i][col_min]
-    end
-
-    if col_max != j
-      adjacent_chrs << input[i][col_max]
-    end
-
-    if  line_max != i
-      adjacent_chrs << input[line_max][col_min..col_max].chars
-    end
-
-    adjacent_chrs.flatten.any? { _1.match?(/[^\.\d]/) }
+    grid.surroundings_values(x: j, y: i).flatten.any? { _1.match?(/[^\.\d]/) }
   end
 
   def adjacent_gears(i,j)
