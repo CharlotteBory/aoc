@@ -8,7 +8,6 @@ class Day03 < Day
   def initialize(input)
     super
     @grid = Grid.new(input:)
-    split_lines!
     @numbers_to_sum = []
     @gear_ratios = Hash.new([])
   end
@@ -35,10 +34,10 @@ class Day03 < Day
   end
 
   def part_two
-    input.each_with_index do |line, y|
+    grid.each_row do |row, y|
       number = []
       adjacent_gears = []
-      line.chars.each_with_index do |chr, x|
+      row.each_with_index do |chr, x|
         if chr.match?(/\d/)
           number.push(chr)
           adjacent_gears << adjacent_gears(x, y)
