@@ -35,13 +35,13 @@ class Day03 < Day
   end
 
   def part_two
-    input.each_with_index do |line, i|
+    input.each_with_index do |line, y|
       number = []
       adjacent_gears = []
-      line.chars.each_with_index do |chr, j|
+      line.chars.each_with_index do |chr, x|
         if chr.match?(/\d/)
           number.push(chr)
-          adjacent_gears << adjacent_gears(i, j)
+          adjacent_gears << adjacent_gears(x, y)
         else
           adjacent_gears.flatten.uniq.each do |coordinates|
             @gear_ratios[coordinates] =  @gear_ratios[coordinates] + [number.join.to_i]
@@ -63,11 +63,11 @@ class Day03 < Day
 
   attr_reader :grid
 
-  def symbol_adjacent?(i, j)
-    grid.surroundings_values(x: j, y: i).flatten.any? { _1.match?(/[^\.\d]/) }
+  def symbol_adjacent?(y, x)
+    grid.surroundings_values(x:, y:).flatten.any? { _1.match?(/[^\.\d]/) }
   end
 
-  def adjacent_gears(i,j)
-    grid.surroundings_keys(x: j, y: i) { |v| v == "*" }
+  def adjacent_gears(x, y)
+    grid.surroundings_keys(x:, y:) { |v| v == "*" }
   end
 end
