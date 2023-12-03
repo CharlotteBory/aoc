@@ -68,15 +68,6 @@ class Day03 < Day
   end
 
   def adjacent_gears(i,j)
-    gears = []
-    gears << "#{i - 1}_#{j - 1}" if i > 0 && j > 0 && input[i - 1][j - 1] == "*"
-    gears << "#{i - 1}_#{j}" if i > 0 && input[i - 1][j] == "*"
-    gears << "#{i - 1}_#{j + 1}" if i > 0 && j < input[0].length - 1 && input[i - 1][j + 1] == "*"
-    gears << "#{i}_#{j - 1}" if j > 0 && input[i][j - 1] == "*"
-    gears << "#{i}_#{j + 1}" if j > 0 && j < input[0].length - 1 && input[i][j + 1] == "*"
-    gears << "#{i + 1}_#{j - 1}" if i < input.length - 1 && j > 0 && input[i + 1][j - 1] == "*"
-    gears << "#{i + 1}_#{j}" if i < input.length - 1 && j > 0 && input[i + 1][j] == "*"
-    gears << "#{i + 1}_#{j + 1}" if i < input.length - 1 && j < input[0].length - 1 && input[i + 1][j + 1] == "*"
-    gears
+    grid.surroundings_keys(x: j, y: i) { |v| v == "*" }
   end
 end
