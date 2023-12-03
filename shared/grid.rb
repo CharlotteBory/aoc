@@ -37,7 +37,7 @@ class Grid
     surroundings
   end
 
-  def key(x, y, separator: "_")
-    [x, y].join(separator)
-  end
+  def key(x, y, separator: "_") = [x, y].join(separator)
+
+  def each_row(...) = grid.each_with_index(...)
 end

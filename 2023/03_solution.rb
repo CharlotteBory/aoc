@@ -14,10 +14,10 @@ class Day03 < Day
   end
 
   def part_one
-    input.each_with_index do |line, i|
+    grid.each_row do |row, i|
       number = []
       symbol_adjacent = false
-      line.chars.each_with_index do |chr, j|
+      row.each_with_index do |chr, j|
         if chr.match?(/\d/)
           number.push(chr)
           symbol_adjacent = symbol_adjacent?(i, j) unless symbol_adjacent
