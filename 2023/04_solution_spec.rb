@@ -25,7 +25,7 @@ describe Day04 do
   describe ".part_two" do
     subject { described_class.part_two(input) }
 
-    let(:solution) { nil }
+    let(:solution) { 30 }
 
     it { is_expected.to eq(solution) }
   end
