@@ -2,7 +2,6 @@
 
 require_relative "../shared/day"
 require_relative "../shared/grid"
-require_relative "../shared/helpers"
 
 class Day03 < Day
   def initialize(input)
@@ -63,10 +62,10 @@ class Day03 < Day
   attr_reader :grid
 
   def symbol_adjacent?(y, x)
-    grid.surroundings_values(x:, y:).flatten.any? { _1.match?(/[^\.\d]/) }
+    grid.surrounding_values(x:, y:).flatten.any? { _1.match?(/[^\.\d]/) }
   end
 
   def adjacent_gears(x, y)
-    grid.surroundings_keys(x:, y:) { |v| v == "*" }
+    grid.surrounding_keys(x:, y:) { |v| v == "*" }
   end
 end
