@@ -52,12 +52,11 @@ class Deck
   def multiply(card)
     id = card.id
     @card_counts[id] = 1 unless @card_counts[id] > 1
-    score = card.winning_count
-    return if score.zero?
+    return if card.winning_count.zero?
 
     card_count = @card_counts[id]
 
-    ((id + 1)..(id + score)).each do |copy_id|
+    ((id + 1)..([id + card.winning_count, @cards.count].min)).each do |copy_id|
       @card_counts[copy_id] += card_count
     end
   end
