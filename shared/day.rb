@@ -2,11 +2,11 @@
 
 class Day
   def self.part_one(...)
-    new(...).part_one
+    self.timed { new(...).part_one }
   end
 
   def self.part_two(...)
-    new(...).part_two
+    self.timed { new(...).part_two }
   end
 
   def initialize(input)
@@ -16,6 +16,13 @@ class Day
   private
 
   attr_accessor :input
+
+  def self.timed(&block)
+    start_time = Time.now
+    result = yield
+    puts "#{((Time.now - start_time) * 1000).round(1)}ms"
+    result
+  end
 
   def split_lines!
     self.input = input.split("\n")
