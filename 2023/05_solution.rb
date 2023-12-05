@@ -90,13 +90,13 @@ class Almanac
     humidity_ranges = temperature_ranges.flat_map do |temperature_range|
       @temperature_to_humidity.map_range(temperature_range)
     end
-    p @temperature_to_humidity
-    p humidity_ranges
+    # p @temperature_to_humidity
+    # p humidity_ranges
     location_ranges = humidity_ranges.flat_map do |humidity_range|
       @humidity_to_location.map_range(humidity_range)
     end
-    p @humidity_to_location
-    p location_ranges
+    # p @humidity_to_location
+    # p location_ranges
     location_ranges.map(&:begin).min
   end
 
@@ -126,8 +126,9 @@ end
 
 class Map
   def initialize(input)
-    @map_lines = input.split("\n").map { MapLine.new(*_1.split(" ").map(&:to_i)) }.flatten
-    sort_map_lines!
+    @map_lines = input.split("\n").map { MapLine.new(*_1.split(" ").map(&:to_i)) }
+      .flatten
+      .sort_by(&:source_start)
   end
 
   def map_value(value)
@@ -138,11 +139,12 @@ class Map
   def map_range(range)
     overlapping_map_lines = @map_lines.select { |map_line| overlap(range, map_line.source_range) }
 
-    p "MAP LINES"
-    p @map_lines
+    # p "MAP LINES"
+    # p @map_lines
 
-    p "OVERLAPPING ONES"
-    p overlapping_map_lines
+    # p "OVERLAPPING ONES"
+    # p overlapping_map_lines
+
     # Source does not overlap at all
     return [range] if overlapping_map_lines.empty?
 
@@ -156,28 +158,24 @@ class Map
 
     # First overlapping range does not fully overlap, add iso sub range
     if range.begin < overlapping_map_lines.first.source_start
-      p "Added from 1: #{(range.begin..(overlapping_map_lines.first.source_start - 1))}"
+      # p "Added from 1: #{(range.begin..(overlapping_map_lines.first.source_start - 1))}"
       ranges << (range.begin..(overlapping_map_lines.first.source_start - 1))
     end
 
     overlapping_map_lines.each do |map_line|
-      p "Added from 2: #{[map_line.source_start, range.begin].max..[map_line.source_end, range.end].min} + #{map_line.increment} => #{(([map_line.source_start, range.begin].max + map_line.increment)..([map_line.source_end, range.end].min + map_line.increment))}"
+      # p "Added from 2: #{[map_line.source_start, range.begin].max..[map_line.source_end, range.end].min} + #{map_line.increment} => #{(([map_line.source_start, range.begin].max + map_line.increment)..([map_line.source_end, range.end].min + map_line.increment))}"
 
       ranges << (([map_line.source_start, range.begin].max + map_line.increment)..([map_line.source_end, range.end].min + map_line.increment))
     end
 
     # Last overlapping range does not fully overlap, add
     if range.end > overlapping_map_lines.last.source_end
-      p "Added from 3: #{((overlapping_map_lines.last.source_end + 1)..range.end)}"
+      # p "Added from 3: #{((overlapping_map_lines.last.source_end + 1)..range.end)}"
 
       ranges << ((overlapping_map_lines.last.source_end + 1)..range.end)
     end
 
     ranges
-  end
-
-  def sort_map_lines!
-    @map_lines = @map_lines.sort { |map_line| map_line.source_start }
   end
 
   def overlap(a, b)
