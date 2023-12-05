@@ -28,7 +28,6 @@ class Almanac
     @temperature_to_humidity = parse(header: "temperature-to-humidity map:", next_header: "humidity-to-location map:")
     @humidity_to_location = parse(header: "humidity-to-location map:")
     @seed_ranges = @seeds.each_slice(2).map { |a, b| (a..a+b-1) }
-    # p @seed_ranges
   end
 
   def parse(header:, next_header: nil)
@@ -62,41 +61,25 @@ class Almanac
     soil_ranges = @seed_ranges.flat_map do |seed_range|
       @seed_to_soil.map_range(seed_range)
     end
-    # p @seed_to_soil
-    # p soil_ranges
+
     fertilizer_ranges = soil_ranges.flat_map do |soil_range|
-      # p soil_range
       @soil_to_fertilizer.map_range(soil_range)
     end
-    # p @soil_to_fertilizer
-    # p fertilizer_ranges
     water_ranges = fertilizer_ranges.flat_map do |fertilizer_range|
-      # p fertilizer_range
       @fertilizer_to_water.map_range(fertilizer_range)
     end
-    # p @fertilizer_to_water
-    # p water_ranges
     light_ranges = water_ranges.flat_map do |water_range|
-      # p water_range
       @water_to_light.map_range(water_range)
     end
-    # p @water_to_light
-    # p light_ranges
     temperature_ranges = light_ranges.flat_map do |light_range|
       @light_to_temperature.map_range(light_range)
     end
-    # p @light_to_temperature
-    # p temperature_ranges
     humidity_ranges = temperature_ranges.flat_map do |temperature_range|
       @temperature_to_humidity.map_range(temperature_range)
     end
-    # p @temperature_to_humidity
-    # p humidity_ranges
     location_ranges = humidity_ranges.flat_map do |humidity_range|
       @humidity_to_location.map_range(humidity_range)
     end
-    # p @humidity_to_location
-    # p location_ranges
     location_ranges.map(&:begin).min
   end
 
@@ -139,12 +122,6 @@ class Map
   def map_range(range)
     overlapping_map_lines = @map_lines.select { |map_line| overlap(range, map_line.source_range) }
 
-    # p "MAP LINES"
-    # p @map_lines
-
-    # p "OVERLAPPING ONES"
-    # p overlapping_map_lines
-
     # Source does not overlap at all
     return [range] if overlapping_map_lines.empty?
 
@@ -158,20 +135,15 @@ class Map
 
     # First overlapping range does not fully overlap, add iso sub range
     if range.begin < overlapping_map_lines.first.source_start
-      # p "Added from 1: #{(range.begin..(overlapping_map_lines.first.source_start - 1))}"
       ranges << (range.begin..(overlapping_map_lines.first.source_start - 1))
     end
 
     overlapping_map_lines.each do |map_line|
-      # p "Added from 2: #{[map_line.source_start, range.begin].max..[map_line.source_end, range.end].min} + #{map_line.increment} => #{(([map_line.source_start, range.begin].max + map_line.increment)..([map_line.source_end, range.end].min + map_line.increment))}"
-
       ranges << (([map_line.source_start, range.begin].max + map_line.increment)..([map_line.source_end, range.end].min + map_line.increment))
     end
 
     # Last overlapping range does not fully overlap, add
     if range.end > overlapping_map_lines.last.source_end
-      # p "Added from 3: #{((overlapping_map_lines.last.source_end + 1)..range.end)}"
-
       ranges << ((overlapping_map_lines.last.source_end + 1)..range.end)
     end
 
