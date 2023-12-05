@@ -60,27 +60,19 @@ class Almanac
   def min_location_for_seed_ranges
     soil_ranges = @seed_ranges.flat_map do |seed_range|
       @seed_to_soil.map_range(seed_range)
-    end
-
-    fertilizer_ranges = soil_ranges.flat_map do |soil_range|
+    end.flat_map do |soil_range|
       @soil_to_fertilizer.map_range(soil_range)
-    end
-    water_ranges = fertilizer_ranges.flat_map do |fertilizer_range|
+    end.flat_map do |fertilizer_range|
       @fertilizer_to_water.map_range(fertilizer_range)
-    end
-    light_ranges = water_ranges.flat_map do |water_range|
+    end.flat_map do |water_range|
       @water_to_light.map_range(water_range)
-    end
-    temperature_ranges = light_ranges.flat_map do |light_range|
+    end.flat_map do |light_range|
       @light_to_temperature.map_range(light_range)
-    end
-    humidity_ranges = temperature_ranges.flat_map do |temperature_range|
+    end.flat_map do |temperature_range|
       @temperature_to_humidity.map_range(temperature_range)
-    end
-    location_ranges = humidity_ranges.flat_map do |humidity_range|
+    end.flat_map do |humidity_range|
       @humidity_to_location.map_range(humidity_range)
-    end
-    location_ranges.map(&:begin).min
+    end.map(&:begin).min
   end
 
   private
