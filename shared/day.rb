@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "pry-byebug"
+
 class Day
   def self.part_one(...)
     self.timed { new(...).part_one }
