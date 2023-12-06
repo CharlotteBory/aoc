@@ -13,7 +13,7 @@ class Day06 < Day
   end
 
   def part_two
-
+    RaceSheet.new(input.map { |l| l.gsub(" ", "") }).margin_of_error
   end
 end
 

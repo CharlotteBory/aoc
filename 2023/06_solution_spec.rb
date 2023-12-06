@@ -21,7 +21,7 @@ Distance:  9  40  200
   describe ".part_two" do
     subject { described_class.part_two(input) }
 
-    let(:solution) { nil }
+    let(:solution) { 71503 }
 
     it { is_expected.to eq(solution) }
   end
