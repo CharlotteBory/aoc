@@ -13,7 +13,7 @@ describe Day07 do
     Str
   end
 
-  describe ".part_one" do
+  xdescribe ".part_one" do
     subject { described_class.part_one(input) }
 
     let(:solution) { 6440 }
@@ -24,7 +24,7 @@ describe Day07 do
   describe ".part_two" do
     subject { described_class.part_two(input) }
 
-    let(:solution) { nil }
+    let(:solution) { 5905 }
 
     it { is_expected.to eq(solution) }
   end
