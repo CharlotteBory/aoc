@@ -8,13 +8,9 @@ class Day06 < Day
     split_lines!
   end
 
-  def part_one
-    RaceSheet.new(input).margin_of_error
-  end
+  def part_one = RaceSheet.new(input).margin_of_error
 
-  def part_two
-    RaceSheet.new(input.map { |l| l.gsub(" ", "") }).margin_of_error
-  end
+  def part_two = RaceSheet.new(input.map { |l| l.gsub(" ", "") }).margin_of_error
 end
 
 class RaceSheet
@@ -24,9 +20,7 @@ class RaceSheet
     @races = @times.zip(@distances).map { |time, distance| Race.new(time:, distance:)  }
   end
 
-  def margin_of_error
-    @races.map(&:ways_to_win).reduce(&:*)
-  end
+  def margin_of_error = @races.map(&:ways_to_win).reduce(&:*)
 end
 
 class Race
