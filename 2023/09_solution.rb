@@ -9,11 +9,11 @@ class Day09 < Day
   end
 
   def part_one
-    input.map { |l| History.new(l).extrapolation }.sum
+    input.map { |l| History.new(l).future_extrapolation }.sum
   end
 
   def part_two
-
+    input.map { |l| History.new(l).past_extrapolation }.sum
   end
 end
 
@@ -22,7 +22,7 @@ class History
     @values = line.split(" ").map(&:to_i)
   end
 
-  def extrapolation
+  def future_extrapolation
     series = @values.dup
     last_nums = [series[-1]]
     while series.sum != 0 do
@@ -40,6 +40,28 @@ class History
       break if i == reversed_last_nums.count - 1
 
       extrapolation += reversed_last_nums[i + 1]
+    end
+    extrapolation
+  end
+
+  def past_extrapolation
+    series = @values.dup
+    first_nums = [series[0]]
+    while series.sum != 0 do
+      new_series = []
+      series = series.each_with_index do |el, i|
+        break if i == series.count - 1
+        new_series << series[i + 1] - el
+      end
+      first_nums << new_series[0]
+      series = new_series
+    end
+    extrapolation = 0
+    reversed_first_nums = first_nums.reverse
+    reversed_first_nums.each_with_index do |num, i|
+      break if i == reversed_first_nums.count - 1
+
+      extrapolation = reversed_first_nums[i + 1] - extrapolation
     end
     extrapolation
   end
